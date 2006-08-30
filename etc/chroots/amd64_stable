@@ -1,0 +1,2 @@
+MOUNT_CONFIGS="base" 
+CHROOT_DEV="/dev/vg/amd64_stable"

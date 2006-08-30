@@ -1,0 +1,41 @@
+#!/bin/bash
+
+source /sbin/functions.sh
+
+CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
+TARGET_CHROOT="${1}"
+if [[ -z ${TARGET_CHROOT} ]]; then
+	eerror "Expected one argument (the name of the chroot)"
+	exit 1
+fi
+shift # shift TARGET_CHROOT off of $@
+
+if [[ -z ${@} ]]; then
+	eerror "Expected some arguments to execute, but got none"
+	exit 1
+fi
+
+# Load our functions
+source "${CHROOT_PREFIX}/libexec/chroot-manager/chroot-functions.sh"
+# Load our settings
+source "${CHROOT_PREFIX}/etc/chroot-manager.conf"
+
+# Initialize the env
+init_chroot_env  ${TARGET_CHROOT}
+
+# Call sudo if we're not root
+sudo=""
+if [[ ${UID} != 0 ]]; then
+	sudo="sudo -H"
+fi
+
+# Do all sorts of binds all over the place
+${sudo} ${CHROOT_PREFIX}/bin/chroot-mount ${TARGET_CHROOT}
+
+# Call linux32 if we're going into an x86 chroot
+linux32=""
+if [[ ${TARGET_CHROOT} =~ x86 ]]; then
+	linux32=linux32
+fi
+
+${sudo} ${linux32} chroot ${CHROOT_HOME} "$@"
