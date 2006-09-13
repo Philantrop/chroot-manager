@@ -1,7 +1,11 @@
 
 source "/sbin/functions.sh" 2>/dev/null || die "Failed to source /sbin/functions.sh"
-source "/home/nichoj/checkouts/chroot-manager/trunk/etc/chroot-manager.conf" 2>/dev/null || die "failed to source chroot-manager.conf"
+CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
+source "${CHROOT_PREFIX}/etc/chroot-manager.conf" 2>/dev/null || die "failed to source chroot-manager.conf"
 
+verbose() {
+	[[ -n ${CHROOT_VERBOSE} ]]
+}
 
 init_chroot_env() {
 	CHROOT_NAME="${1}"
@@ -14,12 +18,14 @@ init_chroot_env() {
 	source "${chroot_config}"
 	CHROOT_HOME="${CHROOTS_HOME}/${CHROOT_NAME}"
 
+	# If we're using a device for chroot
 	if [[ -n ${CHROOT_DEV} ]]; then
+		# attempt to mount if it isn't already
 		if ! is_mounted "${CHROOT_HOME}"; then
-			ebegin "Mounting ${CHROOT_HOME}"
+			verbose && ebegin "Mounting ${CHROOT_DEV} to ${CHROOT_HOME}"
 			mount ${CHROOT_DEV} ${CHROOT_HOME}
 			local result=$?
-			eend ${result}
+			verbose && eend ${result}
 			if [[ ${result} != 0 ]]; then
 				eerror "Problem mounting ${CHROOT_DEV} to ${CHROOT_HOME}"
 				exit 1
@@ -58,6 +64,12 @@ setup_initial_chroot() {
 }
 
 
+# we have a few helper methods, bind_dir and unbind_dir.
+# these do the heavy lifting of, uh, binding and unbinding :)
+# we pass the names here, because they get eval'd later on.
+# basically, we're trying to avoid excessively redudant code
+
+
 function bind_chroot_dirs() {
 	chroot_dirs_helper "bind_dir"
 }
@@ -67,9 +79,9 @@ function unbind_chroot_dirs() {
 }
 
 function chroot_dirs_helper() {
-	local function="$1"
+	local action="$1"
 	local chroot_config="${CHROOT_ETC}/chroots/${CHROOT_NAME}"	
-	echo "Reading config file for ${CHROOT_NAME} at ${chroot_config}"
+	verbose && echo "Reading config file for ${CHROOT_NAME} at ${chroot_config}"
 
 	if [[ ! -f ${chroot_config} ]]; then
 		echo "File does not exist: ${chroot_config}"
@@ -79,16 +91,18 @@ function chroot_dirs_helper() {
 	local mount_configs=$(source ${chroot_config} >/dev/null 2>&1; echo ${MOUNT_CONFIGS})
 	local mount_config
 	for mount_config in ${mount_configs}; do
-		einfo "Checking '${mount_config}' mounts"
+		verbose && einfo "Processing '${mount_config}' mounts"
 		local mount_config_path="${CHROOT_ETC}/chroot-mounts/${mount_config}.mounts"
-		mounts_loop_helper ${function} < ${mount_config_path}
+		mounts_loop_helper ${action} < ${mount_config_path}
 	done
 }
 
-function bind_dir() {
+# binding helper function. takes a path on the real system, and binds it to
+# a path living inside the chroot
+bind_dir() {
 	local chroot_path="${1}"
-	local chrooted_path="${CHROOT_HOME}${chroot_path}"
 	local real_path="${2}"
+	local chrooted_path="${CHROOT_HOME}${chroot_path}"
 
 	if ! is_mounted "${chrooted_path}"; then
 		if [[ ! -d "${chrooted_path}" ]]; then
@@ -105,21 +119,22 @@ function bind_dir() {
 		mount -o bind ${real_path} ${chrooted_path}
 		eend $?
 	else
-		ewarn "${chrooted_path} already mounted, skipping."
-
+		verbose && ewarn "${chrooted_path} already mounted, skipping."
 	fi
 }
 
-function unbind_dir() {
+# binding helper function. takes a path on the real system, and binds it to
+# a path living inside the chroot
+unbind_dir() {
 	local chroot_path="${1}"
 	local chrooted_path="${CHROOT_HOME}${chroot_path}"
 	local real_path="${2}"
 
 	if is_mounted "${chrooted_path}"; then
-		ebegin "Unbinding ${real_path} from ${chrooted_path}"
+		verbose && ebegin "Unbinding ${real_path} from ${chrooted_path}"
 
 		umount "${chrooted_path}"
-		eend $?
+		verbose && eend $?
 	fi
 }
 
