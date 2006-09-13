@@ -1,4 +1,5 @@
 /usr/portage=/home/nichoj/checkouts/gentoo-x86
+/usr/portage/distfiles=/usr/portage/distfiles
 /usr/local/overlays=/usr/local/overlays
 /proc=/proc
 /sys=/sys

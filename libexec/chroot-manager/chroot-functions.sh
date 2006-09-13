@@ -1,6 +1,6 @@
 
 source "/sbin/functions.sh" 2>/dev/null || die "Failed to source /sbin/functions.sh"
-source "/home/nichoj/chroot-manager/etc/chroot-manager.conf" 2>/dev/null || die "failed to source chroot-manager.conf"
+source "/home/nichoj/checkouts/chroot-manager/trunk/etc/chroot-manager.conf" 2>/dev/null || die "failed to source chroot-manager.conf"
 
 
 init_chroot_env() {
