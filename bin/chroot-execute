@@ -20,9 +20,6 @@ source "${CHROOT_PREFIX}/libexec/chroot-manager/chroot-functions.sh"
 # Load our settings
 source "${CHROOT_PREFIX}/etc/chroot-manager.conf"
 
-# Initialize the env
-init_chroot_env  ${TARGET_CHROOT}
-
 # Be smart and use sudo for when we aren't root
 sudo=""
 if [[ ${UID} != 0 ]]; then
@@ -31,6 +28,10 @@ fi
 
 # Do all sorts of binds all over the place
 ${sudo} ${CHROOT_PREFIX}/bin/chroot-mount ${TARGET_CHROOT}
+
+# Initialize the env
+init_chroot_env  ${TARGET_CHROOT}
+
 
 # Call linux32 if we're going into an x86 chroot
 linux32=""
