@@ -74,7 +74,6 @@ sudo_wrapper() {
 
 setup_initial_chroot() {
 	setup_chroot
-	enter_chroot java-config -S ${TARGET_VM}
 	enter_chroot eselect env update && . /etc/profile
 	teardown_chroot
 }

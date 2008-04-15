@@ -28,5 +28,6 @@ if [[ -z ${TARGET_CHROOT} ]]; then
 	eerror "Expected one argument (the name of the chroot)"
 	exit 1
 fi
+
 # Run execute a login shell in our chroot
 $(dirname $0)/chroot-execute "${TARGET_CHROOT}" /bin/bash
