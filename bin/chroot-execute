@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-source /sbin/functions.sh
+source /usr/libexec/paludis/echo_functions.bash 2>/dev/null || die "Failed to source echo_functions.bash"
 
 CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
 TARGET_CHROOT="${1}"
@@ -16,7 +16,7 @@ if [[ -z ${@} ]]; then
 fi
 
 # Load our functions
-source "${CHROOT_PREFIX}/libexec/chroot-manager/chroot-functions.sh"
+source "${CHROOT_PREFIX}/libexec/chroot-manager/chroot-functions.bash"
 # Load our settings
 source "${CHROOT_PREFIX}/etc/chroot-manager.conf"
 

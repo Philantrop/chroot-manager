@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 TARGET_CHROOT="${1}"
 if [[ -z ${TARGET_CHROOT} ]]; then

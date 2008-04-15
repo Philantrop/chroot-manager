@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-source /sbin/functions.sh
+source /usr/libexec/paludis/echo_functions.bash 2>/dev/null || die "Failed to source echo_functions.bash"
 TARGET_CHROOT="${1}"
 if [[ -z ${TARGET_CHROOT} ]]; then
 	eerror "Expected one argument (the name of the chroot)"

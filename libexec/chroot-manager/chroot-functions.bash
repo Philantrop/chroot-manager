@@ -1,5 +1,6 @@
+#!/usr/bin/env bash
 
-source "/sbin/functions.sh" 2>/dev/null || die "Failed to source /sbin/functions.sh"
+source /usr/libexec/paludis/echo_functions.bash 2>/dev/null || die "Failed to source echo_functions.bash"
 CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
 source "${CHROOT_PREFIX}/etc/chroot-manager.conf" 2>/dev/null || die "failed to source chroot-manager.conf"
 
