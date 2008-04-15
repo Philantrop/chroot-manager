@@ -85,15 +85,15 @@ setup_initial_chroot() {
 # basically, we're trying to avoid excessively redudant code
 
 
-function bind_chroot_dirs() {
+bind_chroot_dirs() {
 	chroot_dirs_helper "bind_dir"
 }
 
-function unbind_chroot_dirs() {
+unbind_chroot_dirs() {
 	chroot_dirs_helper "unbind_dir"
 }
 
-function chroot_dirs_helper() {
+chroot_dirs_helper() {
 	local action="$1"
 	local chroot_config="${CHROOT_ETC}/chroots/${CHROOT_NAME}"	
 	verbose && echo "Reading config file for ${CHROOT_NAME} at ${chroot_config}"
@@ -153,7 +153,7 @@ unbind_dir() {
 	fi
 }
 
-function mounts_loop_helper() {
+mounts_loop_helper() {
 	local function="${1}"
 	shift
 
@@ -177,7 +177,7 @@ function mounts_loop_helper() {
 	done
 }
 
-function is_mounted() {
+is_mounted() {
 	local mount_point="${1}"
 
 	# replace double-slashes with single ones
