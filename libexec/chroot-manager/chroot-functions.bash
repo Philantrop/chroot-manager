@@ -75,11 +75,7 @@ sudo_wrapper() {
 setup_initial_chroot() {
 	setup_chroot
 	enter_chroot java-config -S ${TARGET_VM}
-	enter_chroot env-update
-	enter_chroot sed -e 's/buildpkg//' -i /etc/make.conf
-	if [ ! -z ${NOJIKES} ]; then
-		enter_chroot sed -e 's/jikes//' -i /etc/make.conf
-	fi
+	enter_chroot eselect env update && . /etc/profile
 	teardown_chroot
 }
 
