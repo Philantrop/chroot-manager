@@ -65,7 +65,7 @@ list_chroots() {
 sudo_wrapper() {
 	local command=${*}
 
-	if [ ${UID} != 0 ]; then
+	if [[ ${UID} != 0 ]]; then
 		sudo ${command}
 	else
 		${command}
