@@ -51,10 +51,10 @@ ${sudo} ${CHROOT_PREFIX}/bin/chroot-mount ${TARGET_CHROOT}
 # Initialize the env
 init_chroot_env  ${TARGET_CHROOT}
 
-
-# Call linux32 if we're going into an x86 chroot
+# Call linux32 if we're going into an x86 chroot on an x86_64 host
 linux32=""
-if [[ ${TARGET_CHROOT} =~ x86 ]]; then
+if [[ ! ${TARGET_CHROOT} =~ x86_64 && ${TARGET_CHROOT} =~ x86 && $(uname -m) == x86_64 ]]; then
+	verbose && einfo "Mounting x86 chroot on x86_64 host"
 	linux32=linux32
 fi
 
