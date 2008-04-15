@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-source /usr/libexec/paludis/echo_functions.bash 2>/dev/null || die "Failed to source echo_functions.bash"
+CHROOT_MANAGER_HOME=$(dirname ${0})/..
+CHROOT_MANAGER_LIBEXEC="${CHROOT_MANAGER_HOME}/libexec/chroot-manager"
+source "${CHROOT_MANAGER_LIBEXEC}/chroot-functions.bash" || die "Couldn't source chroot-functions.bash."
 
 CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
 TARGET_CHROOT="${1}"
@@ -15,8 +17,6 @@ if [[ -z ${@} ]]; then
 	exit 1
 fi
 
-# Load our functions
-source "${CHROOT_PREFIX}/libexec/chroot-manager/chroot-functions.bash"
 # Load our settings
 source "${CHROOT_PREFIX}/etc/chroot-manager.conf"
 

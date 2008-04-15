@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
+CHROOT_MANAGER_HOME=$(dirname ${0})/..
+CHROOT_MANAGER_LIBEXEC="${CHROOT_MANAGER_HOME}/libexec/chroot-manager"
+source "${CHROOT_MANAGER_LIBEXEC}/chroot-functions.bash" || die "Couldn't source chroot-functions.bash."
+
 TARGET_CHROOT="${1}"
 if [[ -z ${TARGET_CHROOT} ]]; then
 	eerror "Expected one argument (the name of the chroot)"
 	exit 1
 fi
-
-CHROOT_MANAGER_HOME=$(dirname $0)/..
-CHROOT_MANAGER_LIBEXEC="${CHROOT_MANAGER_HOME}/libexec/chroot-manager"
-
-source "${CHROOT_MANAGER_LIBEXEC}/chroot-functions.sh"
 
 init_chroot_env ${TARGET_CHROOT}
 bind_chroot_dirs
