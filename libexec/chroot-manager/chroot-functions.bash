@@ -18,10 +18,16 @@
 # You should have received a copy of the GNU General Public License
 # along with chroot-manager.  If not, see <http://www.gnu.org/licenses/>.
 
+die() {
+	local ret=${1}
+	shift
+	echo "${*}"
+	exit ${ret}
+}
 
-source /usr/libexec/paludis/echo_functions.bash 2>/dev/null || die "Failed to source echo_functions.bash"
+source /usr/libexec/paludis/echo_functions.bash || die "Failed to source echo_functions.bash"
 CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
-source "${CHROOT_PREFIX}/etc/chroot-manager.conf" 2>/dev/null || die "failed to source chroot-manager.conf"
+source "${CHROOT_PREFIX}/etc/chroot-manager.conf" || die "failed to source chroot-manager.conf"
 
 verbose() {
 	[[ -n ${CHROOT_VERBOSE} ]]
