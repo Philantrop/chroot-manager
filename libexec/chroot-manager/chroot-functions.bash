@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
 
+# Copyright 2006 - 2008 Joshua Nichols
+# Copyright 2008 Ingmar Vanhassel, Wulf C. Krueger
+#
+# This file is part of chroot-manager.
+#
+# chroot-manager is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2 or 3 of the License at your 
+# option.
+#
+# chroot-manager is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with chroot-manager.  If not, see <http://www.gnu.org/licenses/>.
+
+
 source /usr/libexec/paludis/echo_functions.bash 2>/dev/null || die "Failed to source echo_functions.bash"
 CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
 source "${CHROOT_PREFIX}/etc/chroot-manager.conf" 2>/dev/null || die "failed to source chroot-manager.conf"
