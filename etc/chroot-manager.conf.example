@@ -1,0 +1,12 @@
+# Defines where you keep your chroot(s).
+CHROOTS_HOME="/chroots"
+
+# Defines where you keep chroot-manager itself.
+CHROOT_PREFIX="/home/krueger/workspace/chroot-manager"
+
+# Defines where chroot-manager's configuration is stored.
+CHROOT_ETC="${CHROOT_PREFIX}/etc"
+
+# This defines the chroot(s) you can enter. You need to have a configuration
+# file of the same name in "${CHROOT_ETC}/chroots".
+ACTIVE_CHROOTS="amd64_stable amd64_testing java_stabilization"

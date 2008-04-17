@@ -1,0 +1,5 @@
+- copy etc/chroot-manager.conf.example to etc/chroot-manager.conf 
+- edit etc/chroot-manager.conf
+- create a configuration file for your chroot in etc/chroots
+	- The minimum you'll need is this entry: MOUNT_CONFIGS="base"
+- enter your chroot by running: chroot-execute <chroot's name> <command to run, e. g. /bin/bash>

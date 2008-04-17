@@ -1,0 +1,8 @@
+ToDo:
+- If the chroot is on a device, umount that, too.
+- Add conversion of chroots to VMs.
+- Write some real docs.
+
+Done:
+
+- Unmount things. Properly. Don't rely on config files staying the same to do the right unmounts.

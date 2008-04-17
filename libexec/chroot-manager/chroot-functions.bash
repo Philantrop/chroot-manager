@@ -60,6 +60,18 @@ init_chroot_env() {
 	fi 
 }
 
+de_init_chroot_env() {
+	CHROOT_NAME="${1}"
+
+	local chroot_config="${CHROOT_ETC}/chroots/${CHROOT_NAME}"
+	if [[ ! -f "${chroot_config}" ]]; then
+		eerror "${chroot_config} is not a file or does not exist"
+		return 1
+	fi
+	source "${chroot_config}"
+	CHROOT_HOME="${CHROOTS_HOME}/${CHROOT_NAME}"
+}
+
 list_chroots() {
 	for vm_chroot in $(find ${CHROOT_HOME} -maxdepth 1 -type d); do
 		vm_chroot=${vm_chroot#${CHROOT_HOME}}
@@ -144,24 +156,25 @@ bind_dir() {
 	fi
 }
 
-# binding helper function. takes a path on the real system, and binds it to
-# a path living inside the chroot
+# unbinding helper function. unbinds a path living inside the chroot.
 unbind_dir() {
 	local chroot_path="${1}"
 	local chrooted_path="${CHROOT_HOME}${chroot_path}"
 	local real_path="${2}"
 
 	if is_mounted "${chrooted_path}"; then
-		verbose && ebegin "Unbinding ${real_path} from ${chrooted_path}"
+		ebegin "Unbinding ${real_path} from ${chrooted_path}"
 
-		umount "${chrooted_path}"
-		verbose && eend $?
+		umount "${chrooted_path}" || umount -l "${chrooted_path}"
+		eend $?
 	fi
 }
 
 mounts_loop_helper() {
 	local function="${1}"
 	shift
+
+	declare -a command_list
 
 	local line
 	read line
@@ -176,10 +189,22 @@ mounts_loop_helper() {
 		local chroot_path="${line%%=*}"
 		local real_path="${line##*=}"
 
-		eval "${function}" "${chroot_path}" "${real_path}"
+#		eval "${function}" "${chroot_path}" "${real_path}"
+#		echo "${function}" "${chroot_path}" "${real_path}"
+
+		if [[ "${function}" == "bind_dir" ]]; then
+		    command_list=( "${command_list[@]}" "${function} ${chroot_path} ${real_path}" )
+		elif [[ "${function}" == "unbind_dir" ]]; then
+		    command_list=( "${function} ${chroot_path} ${real_path}" "${command_list[@]}" )
+		fi
 
 		read line
 		result=$?
+	done
+
+	for command in "${command_list[@]}"; do
+#	    echo "${command}"
+	    eval "${command}"
 	done
 }
 
