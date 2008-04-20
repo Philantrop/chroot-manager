@@ -1,0 +1,8 @@
+# chroot path = real path
+/etc/resolv.conf=/etc/resolv.conf
+/etc/passwd=/etc/passwd
+/etc/shadow=/etc/shadow
+/etc/group=/etc/group
+/etc/gshadow=/etc/gshadow
+/etc/hosts=/etc/hosts
+/etc/localtime=/etc/localtime

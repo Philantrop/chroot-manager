@@ -23,45 +23,11 @@ CHROOT_MANAGER_HOME=$(dirname ${0})/..
 CHROOT_MANAGER_LIBEXEC="${CHROOT_MANAGER_HOME}/libexec/chroot-manager"
 source "${CHROOT_MANAGER_LIBEXEC}/chroot-functions.bash" || die "Couldn't source chroot-functions.bash."
 
-CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
 TARGET_CHROOT="${1}"
 if [[ -z ${TARGET_CHROOT} ]]; then
 	eerror "Expected one argument (the name of the chroot)"
 	exit 1
 fi
-shift # shift TARGET_CHROOT off of $@
 
-if [[ -z ${@} ]]; then
-	eerror "Expected some arguments to execute, but got none"
-	exit 1
-fi
-
-# Load our settings
-source "${CHROOT_PREFIX}/etc/chroot-manager.conf"
-
-# Be smart and use sudo for when we aren't root
-sudo=""
-if [[ ${UID} != 0 ]]; then
-	sudo="sudo -H"
-fi
-
-# Do all sorts of binds all over the place
-${sudo} ${CHROOT_PREFIX}/bin/chroot-mount ${TARGET_CHROOT}
-
-# Optionally copy some files to the chroot
-${sudo} ${CHROOT_PREFIX}/bin/chroot-files ${TARGET_CHROOT}
-
-# Initialize the env
-init_chroot_env  ${TARGET_CHROOT}
-
-# Call linux32 if we're going into an x86 chroot on an x86_64 host
-linux32=""
-if [[ ! ${TARGET_CHROOT} =~ x86_64 && ${TARGET_CHROOT} =~ x86 && $(uname -m) == x86_64 ]]; then
-	verbose && einfo "Mounting x86 chroot on x86_64 host"
-	linux32=linux32
-fi
-
-${sudo} ${linux32} chroot ${CHROOT_HOME} "$@"
-
-# Unmount all those bindings we did before.
-${sudo} ${CHROOT_PREFIX}/bin/chroot-umount ${TARGET_CHROOT}
+init_chroot_env ${TARGET_CHROOT}
+copy_chroot_files "copy_files"

@@ -3,3 +3,5 @@ chroot-manager.conf
 *~
 .*.swp
 \#*\#
+etc/chroots/**
+etc/chroot-mounts/**

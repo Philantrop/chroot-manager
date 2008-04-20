@@ -96,12 +96,30 @@ setup_initial_chroot() {
 	teardown_chroot
 }
 
+copy_chroot_files() {
+    	local action="$1"
+	local chroot_config="${CHROOT_ETC}/chroots/${CHROOT_NAME}"	
+	verbose && echo "Reading config file for ${CHROOT_NAME} at ${chroot_config}"
+
+	if [[ ! -f ${chroot_config} ]]; then
+		echo "File does not exist: ${chroot_config}"
+		return 1
+	fi
+
+	local file_configs=$(source ${chroot_config} >/dev/null 2>&1; echo ${FILE_CONFIGS})
+	local file_config
+	for file_config in ${file_configs}; do
+		verbose && einfo "Processing '${file_config}' file set"
+		local file_config_path="${CHROOT_ETC}/chroot-files/${file_config}.files"
+		mounts_loop_helper "${action}" < ${file_config_path}
+	done
+}
+
 
 # we have a few helper methods, bind_dir and unbind_dir.
 # these do the heavy lifting of, uh, binding and unbinding :)
 # we pass the names here, because they get eval'd later on.
 # basically, we're trying to avoid excessively redudant code
-
 
 bind_chroot_dirs() {
 	chroot_dirs_helper "bind_dir"
@@ -128,6 +146,27 @@ chroot_dirs_helper() {
 		local mount_config_path="${CHROOT_ETC}/chroot-mounts/${mount_config}.mounts"
 		mounts_loop_helper ${action} < ${mount_config_path}
 	done
+}
+
+copy_files() {
+	local chroot_path="${1}"
+	local real_path="${2}"
+	local chrooted_path="${CHROOT_HOME}${chroot_path}"
+	local chrooted_dir=$(dirname "${chrooted_path}")
+
+	if [[ ! -d "${chrooted_dir}" ]]; then
+		ebegin "Creating ${chrooted_dir}"
+		mkdir -p "${chrooted_dir}"
+		if [[ "$?" != 0 ]]; then
+			eerror "Could not create ${chrooted_dir}"
+			return 1
+		fi
+		eend
+	fi
+
+	ebegin "Copying ${real_path} to ${chrooted_path}"
+	cp -pf ${real_path} ${chrooted_path}
+	eend $?
 }
 
 # binding helper function. takes a path on the real system, and binds it to
@@ -175,13 +214,17 @@ mounts_loop_helper() {
 	shift
 
 	declare -a command_list
-
 	local line
+
 	read line
 	local result=$?
 	while [[ ${result} == 0 ]]; do
 		# Ignore comments
-		[[ ${line%%#*} == "" ]] && continue
+		if [[ ${line%%#*} == "" ]]; then
+		     read line
+		     result=$?
+		     continue
+		fi
 
 		# get rid of any spaces
 		line="${line// /}"
@@ -196,6 +239,8 @@ mounts_loop_helper() {
 		    command_list=( "${command_list[@]}" "${function} ${chroot_path} ${real_path}" )
 		elif [[ "${function}" == "unbind_dir" ]]; then
 		    command_list=( "${function} ${chroot_path} ${real_path}" "${command_list[@]}" )
+		elif [[ "${function}" == "copy_files" ]]; then
+		    command_list=( "${command_list[@]}" "${function} ${real_path} ${chroot_path}" )
 		fi
 
 		read line
