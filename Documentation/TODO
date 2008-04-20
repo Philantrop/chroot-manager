@@ -1,4 +1,5 @@
 ToDo:
+- Allow for scripted creation of new chroot, e. g.from scratch, from a tarball, etc.
 - If the chroot is on a device, umount that, too.
 - Add conversion of chroots to VMs.
 - Write some real docs.
