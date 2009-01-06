@@ -7,7 +7,7 @@
 #
 # chroot-manager is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, version 2 or 3 of the License at your 
+# the Free Software Foundation, version 2 or 3 of the License at your
 # option.
 #
 # chroot-manager is distributed in the hope that it will be useful,
@@ -26,14 +26,14 @@ source "${CHROOT_MANAGER_LIBEXEC}/chroot-functions.bash" || die "Couldn't source
 CHROOT_PREFIX=$(dirname ${0})/.. # is there a better way?
 TARGET_CHROOT="${1}"
 if [[ -z ${TARGET_CHROOT} ]]; then
-	eerror "Expected one argument (the name of the chroot)"
-	exit 1
+    eerror "Expected one argument (the name of the chroot)"
+    exit 1
 fi
 shift # shift TARGET_CHROOT off of $@
 
 if [[ -z ${@} ]]; then
-	eerror "Expected some arguments to execute, but got none"
-	exit 1
+    eerror "Expected some arguments to execute, but got none"
+    exit 1
 fi
 
 # Load our settings
@@ -42,7 +42,7 @@ source "${CHROOT_PREFIX}/etc/chroot-manager.conf"
 # Be smart and use sudo for when we aren't root
 sudo=""
 if [[ ${UID} != 0 ]]; then
-	sudo="sudo -H"
+    sudo="sudo -H"
 fi
 
 # Do all sorts of binds all over the place
@@ -57,8 +57,8 @@ init_chroot_env  ${TARGET_CHROOT}
 # Call linux32 if we're going into an x86 chroot on an x86_64 host
 linux32=""
 if [[ ! ${TARGET_CHROOT} =~ x86_64 && ${TARGET_CHROOT} =~ x86 && $(uname -m) == x86_64 ]]; then
-	verbose && einfo "Mounting x86 chroot on x86_64 host"
-	linux32=linux32
+    verbose && einfo "Mounting x86 chroot on x86_64 host"
+    linux32="setarch i386"
 fi
 
 ${sudo} ${linux32} chroot ${CHROOT_HOME} "$@"
