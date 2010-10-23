@@ -1,0 +1,2 @@
+# chroot path = real path
+/etc/resolv.conf=/etc/resolv.conf

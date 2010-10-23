@@ -1,7 +1,6 @@
 # chroot path = real path
 /proc=/proc
 /dev=/dev
-/dev/pts=/dev/pts
-/dev/shm=/dev/shm
+#/dev/pts=/dev/pts
+#/dev/shm=/dev/shm
 /sys=/sys
-/tmp=/tmp
