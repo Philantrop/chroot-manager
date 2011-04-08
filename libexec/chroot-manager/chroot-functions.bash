@@ -49,7 +49,7 @@ init_chroot_env() {
         # attempt to mount if it isn't already
         if ! is_mounted "${CHROOT_HOME}"; then
             verbose && ebegin "Mounting ${CHROOT_DEV} to ${CHROOT_HOME}"
-            mount ${CHROOT_DEV} ${CHROOT_HOME}
+            mount "${CHROOT_DEV}" "${CHROOT_HOME}"
             local result=$?
             verbose && eend ${result}
             if [[ ${result} != 0 ]]; then
@@ -91,7 +91,7 @@ sudo_wrapper() {
 }
 
 copy_chroot_files() {
-        local action="$1"
+    local action="$1"
     local chroot_config="${CHROOT_ETC}/chroots/${CHROOT_NAME}"
     verbose && echo "Reading config file for ${CHROOT_NAME} at ${chroot_config}"
 
