@@ -90,12 +90,6 @@ sudo_wrapper() {
     fi
 }
 
-#setup_initial_chroot() {
-#    setup_chroot
-#    enter_chroot source /etc/profile
-#    teardown_chroot
-#}
-
 copy_chroot_files() {
         local action="$1"
     local chroot_config="${CHROOT_ETC}/chroots/${CHROOT_NAME}"
