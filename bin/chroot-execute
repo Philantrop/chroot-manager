@@ -61,7 +61,7 @@ if [[ ! ${TARGET_CHROOT} =~ x86_64 && ${TARGET_CHROOT} =~ x86 && $(uname -m) == 
     linux32="setarch i386"
 fi
 
-${sudo} ${linux32} env -i TERM=$TERM SHELL=/bin/bash HOME=$HOME chroot ${CHROOT_HOME} "$@"
+${sudo} ${linux32} env -i TERM=$TERM SHELL=/bin/bash HOME=$HOME chroot "${CHROOT_HOME}" "$@"
 
 # Unmount all those bindings we did before.
 ${sudo} ${CHROOT_PREFIX}/bin/chroot-umount ${TARGET_CHROOT}
