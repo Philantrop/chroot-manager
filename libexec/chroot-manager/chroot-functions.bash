@@ -258,7 +258,7 @@ is_mounted() {
 
     local mounted_dir
     for mounted_dir in $(awk '{print $2}' /etc/mtab); do
-        if [[ "${mounted_dir}" == "${mount_point}" ]]; then
+        if [[ ${mounted_dir} == ${mount_point} ]]; then
             return 0
         fi
     done
