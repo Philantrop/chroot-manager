@@ -182,7 +182,7 @@ bind_dir() {
         fi
 
         ebegin "Binding ${real_path} to ${chrooted_path}"
-        mount -o rbind ${real_path} ${chrooted_path}
+        mount -o bind ${real_path} ${chrooted_path}
         eend $?
     else
         verbose && ewarn "${chrooted_path} already mounted, skipping."
