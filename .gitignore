@@ -5,3 +5,4 @@ chroot-manager.conf
 \#*\#
 etc/chroots/**
 etc/chroot-mounts/**
+!etc/chroots/example_chroot_config
