@@ -6,3 +6,7 @@ CHROOT_PREFIX="/home/krueger/workspace/chroot-manager"
 
 # Defines where chroot-manager's configuration is stored.
 CHROOT_ETC="${CHROOT_PREFIX}/etc"
+
+# Defines which chroot (or similar) command to run to initialise the chroot.
+# Supported values are: chroot, systemd-nspawn
+CHROOT_COMMAND="chroot"

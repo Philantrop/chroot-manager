@@ -61,7 +61,17 @@ if [[ ! ${TARGET_CHROOT} =~ x86_64 && ${TARGET_CHROOT} =~ x86 && $(uname -m) == 
     linux32="setarch i386"
 fi
 
-${sudo} ${linux32} env -i TERM=$TERM SHELL=/bin/bash HOME=$HOME chroot "${CHROOT_HOME}" "$@"
+case ${CHROOT_COMMAND} in
+    chroot)
+        ${sudo} ${linux32} env -i TERM=${TERM} SHELL=/bin/bash HOME=${HOME} chroot "${CHROOT_HOME}" "$@"
+    ;;
+    systemd-nspawn)
+        ${sudo} ${linux32} env -i TERM=${TERM} SHELL=/bin/bash HOME=${HOME} systemd-nspawn -D "${CHROOT_HOME}" "$@"
+    ;;
+    *)
+        echo "Unsupported chroot command"
+    ;;
+esac
 
 # Unmount all those bindings we did before.
 ${sudo} ${CHROOT_PREFIX}/bin/chroot-umount ${TARGET_CHROOT}

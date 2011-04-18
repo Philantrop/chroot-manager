@@ -1,7 +1,8 @@
 # This is a minimal example configuration to use as a starting point.
 #
 # Defines which mounts should be used for the chroot. Space separated.
-MOUNT_CONFIGS="base" 
+# If you use systemd-nspawn, you don't need "base" in MOUNT_CONFIGS.
+MOUNT_CONFIGS="base"
 
 # If you want to copy some files to your chroot, you can define sets
 # like you can do for MOUNT_CONFIGS. Space separated.
