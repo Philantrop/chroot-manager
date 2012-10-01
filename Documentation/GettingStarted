@@ -1,3 +1,5 @@
+Getting started:
+
 - copy etc/chroot-manager.conf.example to etc/chroot-manager.conf 
 - edit etc/chroot-manager.conf
 - create a configuration file for your chroot in etc/chroots
