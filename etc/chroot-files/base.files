@@ -4,5 +4,5 @@
 /etc/shadow=/etc/shadow
 /etc/group=/etc/group
 /etc/gshadow=/etc/gshadow
-/etc/hosts=/etc/hosts
+#/etc/hosts=/etc/hosts
 /etc/localtime=/etc/localtime
